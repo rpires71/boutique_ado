@@ -1,0 +1,46 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    {% block meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock %}
+
+    <title>Boutique Ado{% block extra_title %}{% endblock %}</title>
+
+    {% block corecss %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% endblock %}
+
+    {% block extra_css %}{% endblock %}
+
+    {% block corejs %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock %}
+
+    {% block extra_js %}{% endblock %}
+</head>
+<body>
+    <header class="container-fluid fixed-top bg-white border-bottom">
+        {% block page_header %}{% endblock %}
+    </header>
+
+    {% if messages %}
+        <div class="message-container mt-5 pt-4 container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show mt-3" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="container" style="padding-top: 120px;">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block postloadjs %}{% endblock %}
+</body>
+</html>
