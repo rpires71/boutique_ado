@@ -3,11 +3,43 @@ html {
 }
 
 body {
-    background: url('/media/homepage.jpg') no-repeat center center fixed;
+    background: url('/media/homepage.jpg') no-repeat right center fixed;
     background-size: cover;
     height: calc(100vh - 164px);
     color: #555;
-    font-family: Arial, sans-serif;
+    font-family: 'Lato', sans-serif;
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background: white;
+    z-index: -1;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.icon {
+    position: relative;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+}
+
+.icon i {
+    font-size: 1rem;
+    line-height: 2rem;
 }
 
 .logo-font {
@@ -49,4 +81,28 @@ body {
 
 .header-container {
     padding-top: 164px;
+}
+
+.bg-black {
+    background: black !important;
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 80%;
+    }
+}
+
+@media (min-width: 992px) {
+    .fixed-top-desktop-only {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        z-index: 1030;
+    }
+
+    .header-container {
+        padding-top: 164px;
+    }
 }
