@@ -87,6 +87,25 @@ a:hover {
     background: black !important;
 }
 
+.overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background: white;
+    z-index: -1;
+}
+
+.card-img-top {
+    height: 300px;
+    object-fit: cover;
+}
+
+.header-container {
+    padding-top: 116px;
+}
+
 @media (min-width: 1200px) {
     .container {
         max-width: 80%;
