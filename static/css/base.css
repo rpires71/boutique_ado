@@ -106,6 +106,21 @@ a:hover {
     padding-top: 116px;
 }
 
+.category-badge > span:hover {
+    background: #212529;
+    color: #fff !important;
+}
+
+.btt-link,
+.update-link,
+.remove-item {
+    cursor: pointer;
+}
+
+.sort-select-wrapper {
+    width: fit-content;
+}
+
 @media (min-width: 1200px) {
     .container {
         max-width: 80%;
