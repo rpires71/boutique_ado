@@ -135,6 +135,19 @@ a:hover {
     cursor: pointer;
 }
 
+.btn-outline-black {
+    background: white;
+    color: black !important;
+    border: 1px solid black;
+}
+
+.btn-outline-black:hover,
+.btn-outline-black:active,
+.btn-outline-black:focus {
+    background: black;
+    color: white !important;
+}
+
 @media (min-width: 1200px) {
     .container {
         max-width: 80%;
