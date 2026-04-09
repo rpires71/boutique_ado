@@ -1,0 +1,46 @@
+<script>
+    function handleEnableDisable(itemId) {
+        const currentValue = parseInt($(`#id_qty_${itemId}`).val());
+        const minusDisabled = currentValue < 2;
+        const plusDisabled = currentValue > 98;
+
+        $(`#decrement-qty_${itemId}`).prop('disabled', minusDisabled);
+        $(`#increment-qty_${itemId}`).prop('disabled', plusDisabled);
+    }
+
+    $('.decrement-qty').click(function(e) {
+        e.preventDefault();
+        const closestInput = $(this).closest('.input-group').find('.qty_input')[0];
+        let currentValue = parseInt($(closestInput).val());
+
+        if (currentValue > 1) {
+            $(closestInput).val(currentValue - 1);
+        }
+
+        const itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    });
+
+    $('.increment-qty').click(function(e) {
+        e.preventDefault();
+        const closestInput = $(this).closest('.input-group').find('.qty_input')[0];
+        let currentValue = parseInt($(closestInput).val());
+
+        if (currentValue < 99) {
+            $(closestInput).val(currentValue + 1);
+        }
+
+        const itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    });
+
+    $('.qty_input').change(function() {
+        const itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    });
+
+    $('.qty_input').each(function() {
+        const itemId = $(this).data('item_id');
+        handleEnableDisable(itemId);
+    });
+</script>
