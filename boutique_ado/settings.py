@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'home',
     'products',
     'bag',
-    'checkout',
+    'checkout.apps.CheckoutConfig',
+    'crispy_forms',
+    'crispy_bootstrap4',
 
     # Optional later for Google/Facebook etc.
     # 'allauth.socialaccount',
@@ -79,7 +81,12 @@ TEMPLATES = [
                 'django.template.context_processors.request', # required by allauth
                 'django.contrib.auth.context_processors.auth', 
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
                 'bag.contexts.bag_contents',
+            ],
+            'builtins': [
+                'crispy_forms.templatetags.crispy_forms_tags',
+                'crispy_forms.templatetags.crispy_forms_field',
             ],
         },
     },
@@ -153,3 +160,5 @@ FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
