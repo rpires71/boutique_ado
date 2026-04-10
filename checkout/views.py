@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 
@@ -5,7 +6,7 @@ from .forms import OrderForm
 
 
 def checkout(request):
-    """ A view to render the checkout page """
+    """A view to render the checkout page."""
 
     bag = request.session.get('bag', {})
 
@@ -17,6 +18,8 @@ def checkout(request):
 
     context = {
         'order_form': order_form,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+        'client_secret': 'test client secret',
     }
 
     return render(request, 'checkout/checkout.html', context)
