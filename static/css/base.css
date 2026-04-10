@@ -183,6 +183,12 @@ a:hover {
     border-bottom: 10px solid #17a2b8;
 }
 
+.bag-notification-wrapper {
+    max-height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 @media (min-width: 1200px) {
     .container {
         max-width: 80%;
