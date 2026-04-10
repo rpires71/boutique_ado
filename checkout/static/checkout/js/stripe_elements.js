@@ -23,10 +23,15 @@ const style = {
 const card = elements.create('card', { style: style });
 card.mount('#card-element');
 
-card.on('change', function (event) {
+card.on('change', function(event) {
     const errorDiv = document.getElementById('card-errors');
     if (event.error) {
-        errorDiv.textContent = event.error.message;
+        errorDiv.innerHTML = `
+            <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+            </span>
+            <span>${event.error.message}</span>
+        `;
     } else {
         errorDiv.textContent = '';
     }
