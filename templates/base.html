@@ -123,11 +123,19 @@
     </header>
 
     {% if messages %}
-        <div class="message-container mt-5 pt-4 container">
+        <div class="message-container">
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags|default:'info' }}">
-                    {{ message }}
-                </div>
+                {% with message.level as level %}
+                    {% if level == 40 %}
+                        {% include 'includes/toasts/toast_error.html' %}
+                    {% elif level == 30 %}
+                        {% include 'includes/toasts/toast_warning.html' %}
+                    {% elif level == 25 %}
+                        {% include 'includes/toasts/toast_success.html' %}
+                    {% else %}
+                        {% include 'includes/toasts/toast_info.html' %}
+                    {% endif %}
+                {% endwith %}
             {% endfor %}
         </div>
     {% endif %}
@@ -141,6 +149,9 @@
     </main>
 
     {% block postloadjs %}
+        <script>
+            $('.toast').toast('show');
+        </script>
     {% endblock %}
 </body>
 </html>
