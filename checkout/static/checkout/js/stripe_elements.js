@@ -55,16 +55,16 @@ form.addEventListener('submit', async function (ev) {
         payment_method: {
             card: card,
             billing_details: {
-                name: document.getElementById('id_full_name').value.trim(),
-                email: document.getElementById('id_email').value.trim(),
-                phone: document.getElementById('id_phone_number').value.trim(),
+                name: document.getElementById('id_full_name')?.value.trim() || '',
+                email: document.getElementById('id_email').value.trim() || '',
+                phone: document.getElementById('id_phone_number').value.trim() || '',
                 address: {
-                    line1: document.getElementById('id_street_address1').value.trim(),
-                    line2: document.getElementById('id_street_address2').value.trim(),
-                    city: document.getElementById('id_town_or_city').value.trim(),
-                    state: document.getElementById('id_county').value.trim(),
-                    postal_code: document.getElementById('id_postcode').value.trim(),
-                    country: document.getElementById('id_country').value,
+                    line1: document.getElementById('id_street_address1').value.trim() || '',
+                    line2: document.getElementById('id_street_address2').value.trim() || '',
+                    city: document.getElementById('id_town_or_city').value.trim() || '',
+                    state: document.getElementById('id_county').value.trim() || '',
+                    postal_code: document.getElementById('id_postcode').value.trim() || '',
+                    country: document.getElementById('id_country').value || '',
                 }
             }
         },
@@ -80,8 +80,12 @@ form.addEventListener('submit', async function (ev) {
         card.update({ disabled: false });
         submitButton.disabled = false;
     } else {
-        if (result.paymentIntent.status === 'succeeded') {
+        if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
             form.submit();
-        }
+        } else {
+            cardErrors.textContent = "Payment processing issue. Please try again.";
+            card.update({ disabled: false });
+            submitButton.disabled = false;
+        }   
     }
 });
