@@ -1,5 +1,9 @@
-const stripePublicKey = JSON.parse(document.getElementById('id_stripe_public_key').textContent);
-const clientSecret = JSON.parse(document.getElementById('id_client_secret').textContent);
+const stripePublicKey = JSON.parse(
+    document.getElementById('id_stripe_public_key').textContent
+);
+const clientSecret = JSON.parse(
+    document.getElementById('id_client_secret').textContent
+);
 
 const stripe = Stripe(stripePublicKey);
 const elements = stripe.elements();
@@ -23,7 +27,7 @@ const style = {
 const card = elements.create('card', { style: style });
 card.mount('#card-element');
 
-card.on('change', function(event) {
+card.on('change', function (event) {
     const errorDiv = document.getElementById('card-errors');
     if (event.error) {
         errorDiv.innerHTML = `
@@ -34,5 +38,50 @@ card.on('change', function(event) {
         `;
     } else {
         errorDiv.textContent = '';
+    }
+});
+
+const form = document.getElementById('payment-form');
+const cardErrors = document.getElementById('card-errors');
+const submitButton = document.getElementById('submit-button');
+
+form.addEventListener('submit', async function (ev) {
+    ev.preventDefault();
+
+    card.update({ disabled: true });
+    submitButton.disabled = true;
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+            card: card,
+            billing_details: {
+                name: document.getElementById('id_full_name').value.trim(),
+                email: document.getElementById('id_email').value.trim(),
+                phone: document.getElementById('id_phone_number').value.trim(),
+                address: {
+                    line1: document.getElementById('id_street_address1').value.trim(),
+                    line2: document.getElementById('id_street_address2').value.trim(),
+                    city: document.getElementById('id_town_or_city').value.trim(),
+                    state: document.getElementById('id_county').value.trim(),
+                    postal_code: document.getElementById('id_postcode').value.trim(),
+                    country: document.getElementById('id_country').value,
+                }
+            }
+        },
+    });
+
+    if (result.error) {
+        cardErrors.innerHTML = `
+            <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+            </span>
+            <span>${result.error.message}</span>
+        `;
+        card.update({ disabled: false });
+        submitButton.disabled = false;
+    } else {
+        if (result.paymentIntent.status === 'succeeded') {
+            form.submit();
+        }
     }
 });
