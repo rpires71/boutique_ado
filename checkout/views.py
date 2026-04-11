@@ -6,9 +6,11 @@ from .forms import OrderForm
 from .models import Order, OrderLineItem
 from products.models import Product
 from bag.contexts import bag_contents
+from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 
 import stripe
-
+import json
 
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
@@ -116,3 +118,28 @@ def checkout_success(request, order_number):
     }
 
     return render(request, template, context)
+
+@require_POST
+def cache_checkout_data(request):
+    """Cache checkout data in the PaymentIntent metadata."""
+    try:
+        data = json.loads(request.body)
+        client_secret = data.get('client_secret')
+        save_info = data.get('save_info')
+
+        pid = client_secret.split('_secret')[0]
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        stripe.PaymentIntent.modify(
+            pid,
+            metadata={
+                'bag': json.dumps(request.session.get('bag', {})),
+                'save_info': save_info,
+                'username': request.user if request.user.is_authenticated else 'AnonymousUser',
+            },
+        )
+        return HttpResponse(status=200)
+
+    except Exception as e:
+        messages.error(request, 'Sorry, your payment cannot be processed right now. Please try again later.')
+        return HttpResponse(content=e, status=400)
