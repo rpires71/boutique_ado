@@ -166,6 +166,7 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STRIPE_CURRENCY = 'gbp'
+STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET', '')
 
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
