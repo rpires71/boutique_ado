@@ -18,6 +18,7 @@ def checkout(request):
 
     if request.method == 'POST':
         bag = request.session.get('bag', {})
+        pid = request.POST.get('client_secret').split('_secret')[0]
 
         form_data = {
             'full_name': request.POST['full_name'],
@@ -29,6 +30,8 @@ def checkout(request):
             'street_address1': request.POST['street_address1'],
             'street_address2': request.POST['street_address2'],
             'county': request.POST['county'],
+            'original_bag': json.dumps(bag),
+            'stripe_pid': pid,
         }
         order_form = OrderForm(form_data)
         if order_form.is_valid():

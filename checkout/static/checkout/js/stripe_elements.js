@@ -54,9 +54,8 @@ form.addEventListener('submit', async function (ev) {
     loadingOverlay.style.display = 'block';
 
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const saveInfo = document.getElementById('id-save-info')
-        ? document.getElementById('id-save-info').checked
-        : false;
+    const saveInfoBox = document.getElementById('id-save-info');
+    const saveInfo = saveInfoBox ? saveInfoBox.checked : false;
 
     try {
         const response = await fetch('/checkout/cache_checkout_data/', {
