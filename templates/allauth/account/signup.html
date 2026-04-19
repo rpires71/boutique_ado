@@ -1,18 +1,17 @@
 {% extends "allauth/account/base.html" %}
 {% load i18n %}
-{% load account %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block inner_content %}
 <hr>
-<h2 class="logo-font mb-4">{% trans "Sign In" %}</h2>
+<h2 class="logo-font mb-4">{% trans "Sign Up" %}</h2>
 <hr>
 
-<p>{% blocktrans %}Welcome back to Boutique Ado. Please log in to your account.{% endblocktrans %}</p>
+<p>{% blocktrans %}Already have an account? Then please <a class="link" href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
+<form class="signup" method="POST" action="{% url 'account_signup' %}">
     {% csrf_token %}
     {{ form|crispy }}
     {% if redirect_field_value %}
@@ -20,14 +19,10 @@
     {% endif %}
     <div class="mb-2">
         <button class="btn btn-black rounded-0 text-uppercase" type="submit">
-            {% trans "Sign In" %}
+            {% trans "Sign Up" %}
         </button>
     </div>
 </form>
-
-<p class="small">
-    <a href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-</p>
 
 <a class="btn btn-outline-black rounded-0 text-uppercase" href="{% url 'home' %}">
     Home

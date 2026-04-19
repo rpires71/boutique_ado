@@ -25,4 +25,7 @@ class UserProfile(models.Model):
 def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+
+    # Safe update for existing users who already have a profile
+    UserProfile.objects.get_or_create(user=instance)
     instance.userprofile.save()
