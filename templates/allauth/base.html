@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block head_title %}{% block inner_head_title %}{% endblock %}{% endblock %}
+
+{% block content %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col"></div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            {% block inner_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

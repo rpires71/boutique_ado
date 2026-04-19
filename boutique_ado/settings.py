@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_countries',
 
     # Required by allauth
     'django.contrib.sites',
@@ -57,6 +58,8 @@ INSTALLED_APPS = [
 
     # Optional later for Google/Facebook etc.
     # 'allauth.socialaccount',
+
+    'profiles',
 ]
 
 MIDDLEWARE = [
