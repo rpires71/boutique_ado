@@ -8,8 +8,6 @@
     color: #aab7c4;
 }
 
-/* Country field */
-
 #id_default_country,
 #id_default_country option:not(:first-child) {
     color: #000;
@@ -17,4 +15,9 @@
 
 #id_default_country option:first-child {
     color: #aab7c4;
+}
+
+.order-history {
+    max-height: 416px;
+    overflow-y: auto;
 }
