@@ -3,10 +3,13 @@ import time
 
 import stripe
 
-from django.http import HttpResponse
 from django.conf import settings
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 
 from products.models import Product
+from profiles.models import UserProfile
 from .models import Order, OrderLineItem
 
 
@@ -17,6 +20,28 @@ class StripeWH_Handler:
         """Store the request object."""
         self.request = request
 
+    def _send_confirmation_email(self, order):
+        """Send the user a confirmation email."""
+        cust_email = order.email
+        subject = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_subject.txt',
+            {'order': order}
+        )
+        body = render_to_string(
+            'checkout/confirmation_emails/confirmation_email_body.txt',
+            {
+                'order': order,
+                'contact_email': settings.DEFAULT_FROM_EMAIL,
+            }
+        )
+
+        send_mail(
+            subject,
+            body,
+            settings.DEFAULT_FROM_EMAIL,
+            [cust_email]
+        )
+
     def handle_event(self, event):
         """Handle generic/unexpected webhook events."""
         return HttpResponse(
@@ -25,14 +50,13 @@ class StripeWH_Handler:
         )
 
     def handle_payment_intent_succeeded(self, event):
-        """
-        Handle the payment_intent.succeeded webhook.
-        """
+        """Handle the payment_intent.succeeded webhook."""
         intent = event.data.object
         pid = intent.id
 
         bag = intent.metadata.bag if hasattr(intent.metadata, 'bag') else None
         save_info = intent.metadata.save_info if hasattr(intent.metadata, 'save_info') else None
+        username = intent.metadata.username if hasattr(intent.metadata, 'username') else 'AnonymousUser'
 
         if not bag:
             return HttpResponse(
@@ -66,6 +90,20 @@ class StripeWH_Handler:
             if address.state == "":
                 address.state = None
 
+        profile = None
+        if username != 'AnonymousUser':
+            profile = UserProfile.objects.get(user__username=username)
+
+            if save_info:
+                profile.default_phone_number = shipping_details.phone if shipping_details else None
+                profile.default_country = address.country if address else None
+                profile.default_postcode = address.postal_code if address else None
+                profile.default_town_or_city = address.city if address else None
+                profile.default_street_address1 = address.line1 if address else None
+                profile.default_street_address2 = address.line2 if address else None
+                profile.default_county = address.state if address else None
+                profile.save()
+
         order_exists = False
         attempt = 1
         order = None
@@ -94,6 +132,7 @@ class StripeWH_Handler:
                 time.sleep(1)
 
         if order_exists:
+            self._send_confirmation_email(order)
             return HttpResponse(
                 content=(
                     f'Webhook received: {event["type"]} | '
@@ -104,6 +143,7 @@ class StripeWH_Handler:
 
         try:
             order = Order.objects.create(
+                user_profile=profile,
                 full_name=shipping_details.name if shipping_details else None,
                 email=billing_details.email,
                 phone_number=shipping_details.phone if shipping_details else None,
@@ -142,6 +182,8 @@ class StripeWH_Handler:
                 content=f'Webhook received: {event["type"]} | ERROR: {e}',
                 status=500
             )
+
+        self._send_confirmation_email(order)
 
         return HttpResponse(
             content=(
